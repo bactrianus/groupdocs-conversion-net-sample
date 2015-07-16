@@ -20,10 +20,8 @@ namespace GroupDocs.Conversion.CustomInputDataHandler
             var inputDataHandler = new AmazonInputDataHandler();
             var conversionHandler = new ConversionHandler(conversionConfig, inputDataHandler);
 
-            var fileDescription  = inputDataHandler.GetFileDescription(sourceFileName);
-
-            var converter = conversionHandler.GetToPdfConverter(fileDescription, new PdfOptions());
-            var resultStream = converter.Convert();
+            var converter = conversionHandler.GetPdfConverter(sourceFileName);
+            var resultStream = converter.Convert<Stream>(new PdfOptions());
             using (var file = new FileStream(resultFileName, FileMode.Create))
             {
                 var buffer = new byte[16384];

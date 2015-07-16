@@ -25,10 +25,8 @@ namespace GroupDocs.Conversion.CustomCacheDataHandler
             var cacheDataHandler = new AmazonCacheDataHandler(conversionConfig);
             var conversionHandler = new ConversionHandler(conversionConfig, inputDataHandler, cacheDataHandler);
 
-            var fileDescription  = inputDataHandler.GetFileDescription(sourceFileName);
-
-            var converter = conversionHandler.GetToPdfConverter(fileDescription, new PdfOptions());
-            var resultStream = converter.Convert();
+            var converter = conversionHandler.GetPdfConverter(sourceFileName);
+            var resultStream = converter.Convert<Stream>(new PdfOptions());
             using (var file = new FileStream(resultFileName, FileMode.Create))
             {
                 var buffer = new byte[16384];

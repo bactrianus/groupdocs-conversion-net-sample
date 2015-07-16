@@ -1,3 +1,4 @@
+*.suo
 packages
 GroupDocs.Conversion for .NET Sample/bin
 GroupDocs.Conversion for .NET Sample/obj

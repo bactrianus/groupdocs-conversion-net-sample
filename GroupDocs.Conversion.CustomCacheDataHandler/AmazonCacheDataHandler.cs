@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.IO;
@@ -6,7 +7,6 @@ using GroupDocs.Conversion.Config;
 using GroupDocs.Conversion.Converter.Option;
 using GroupDocs.Conversion.Domain;
 using GroupDocs.Conversion.Handler.Cache;
-using GroupDocs.Foundation.Utils.Wrapper.Stream;
 
 namespace GroupDocs.Conversion.CustomCacheDataHandler
 {
@@ -14,7 +14,7 @@ namespace GroupDocs.Conversion.CustomCacheDataHandler
     {
         private static string bucketName = ""; //TODO: Put you bucketname here 
         private readonly ConversionConfig _conversionConfig;
-        private readonly AmazonS3 _client;
+        private readonly AmazonS3Client _client;
 
         public AmazonCacheDataHandler(ConversionConfig conversionConfig)
         {
@@ -61,7 +61,7 @@ namespace GroupDocs.Conversion.CustomCacheDataHandler
             return (fileInfo.LastWriteTimeUtc >= DateTime.UtcNow.AddMinutes(-5));
         }
 
-        public GroupDocsInputStream GetInputStream(CacheFileDescription cacheFileDescription)
+        public Stream GetInputStream(CacheFileDescription cacheFileDescription)
         {
             if (cacheFileDescription == null || String.IsNullOrEmpty(cacheFileDescription.Guid) ||
                 cacheFileDescription.LastModified == 0)
@@ -77,17 +77,17 @@ namespace GroupDocs.Conversion.CustomCacheDataHandler
                 throw new System.Exception("File not found");
             }
 
-            return new GroupDocsInputStream(fileInfo.OpenRead());
+            return fileInfo.OpenRead();
 
         }
 
-        public GroupDocsOutputStream GetOutputSaveStream(CacheFileDescription cacheFileDescription)
+        public Stream GetOutputSaveStream(CacheFileDescription cacheFileDescription)
         {
             try
             {
                 if (!_conversionConfig.IsUseCache())
                 {
-                    return new GroupDocsOutputStream();
+                    return new MemoryStream();
                 }
 
                 if (cacheFileDescription == null || String.IsNullOrEmpty(cacheFileDescription.Guid))
@@ -97,12 +97,17 @@ namespace GroupDocs.Conversion.CustomCacheDataHandler
 
                 string key = GetCachePath(_conversionConfig.CachePath, cacheFileDescription);
                 S3FileInfo fileInfo = new S3FileInfo(_client, bucketName, key);
-                return new GroupDocsOutputStream(fileInfo.Create());
+                return fileInfo.Create();
             }
             catch (System.Exception e)
             {
                 throw new System.Exception(e.Message);
             }
+        }
+
+        public string GetCacheUri(CacheFileDescription cacheFileDescription)
+        {
+            return GetCachePath(_conversionConfig.CachePath, cacheFileDescription);
         }
 
         private string GetCachePath(string path, CacheFileDescription cacheFileDescription)
@@ -114,29 +119,30 @@ namespace GroupDocs.Conversion.CustomCacheDataHandler
             string filePath;
             string fileName;
 
-            if (cacheFileDescription.Options is ImageOptions)
+            var options = cacheFileDescription.Options as ImageOptions;
+            if (options != null)
             {
-                if (!string.IsNullOrEmpty(cacheFileDescription.Options.CustomName))
+                if (!string.IsNullOrEmpty(options.CustomName))
                 {
-                    if (((ImageOptions)cacheFileDescription.Options).UseWidthForCustomName)
+                    if (options.UseWidthForCustomName)
                     {
-                        fileName = string.Format("{0}_{1}.{2}", cacheFileDescription.Options.CustomName,
-                            ((ImageOptions)cacheFileDescription.Options).Width,
-                            cacheFileDescription.Options.ConvertFileType.ToString().ToLower());
+                        fileName = string.Format("{0}_{1}.{2}", options.CustomName,
+                            options.Width,
+                            options.ConvertFileType.ToString().ToLower());
                     }
                     else
                     {
-                        fileName = string.Format("{0}.{1}", cacheFileDescription.Options.CustomName,
-                            cacheFileDescription.Options.ConvertFileType.ToString().ToLower());
+                        fileName = string.Format("{0}.{1}", options.CustomName,
+                            options.ConvertFileType.ToString().ToLower());
                     }
                 }
                 else
                 {
                     fileName = string.Format("{0}.{1}", cacheFileDescription.BaseName,
-                            cacheFileDescription.Options.ConvertFileType.ToString().ToLower());
+                            options.ConvertFileType.ToString().ToLower());
                 }
                 filePath = string.Format(@"{0}\{1}\{2}\{3}", path, cacheFileDescription.Guid,
-                    cacheFileDescription.Options.PageNumber, fileName);
+                    options.PageNumber, fileName);
             }
             else
             {

@@ -4,14 +4,12 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using GroupDocs.Conversion.Domain;
 using GroupDocs.Conversion.Handler.Input;
-using GroupDocs.Foundation.Utils.Wrapper.Stream;
-
 namespace GroupDocs.Conversion.CustomInputDataHandler
 {
     public class AmazonInputDataHandler: IInputDataHandler
     {
         private static string bucketName = ""; //TODO: Put you bucketname here 
-        private readonly AmazonS3 _client;
+        private readonly AmazonS3Client _client;
 
         public AmazonInputDataHandler()
         {
@@ -44,7 +42,7 @@ namespace GroupDocs.Conversion.CustomInputDataHandler
             return result;
         }
 
-        public GroupDocsInputStream GetFile(string guid)
+        public Stream GetFile(string guid)
         {
             var request = new GetObjectRequest
             {
@@ -63,12 +61,7 @@ namespace GroupDocs.Conversion.CustomInputDataHandler
                 }
 
             }
-            return new GroupDocsInputStream(result);
-        }
-
-        public string Save(GroupDocsInputStream fileStream, string fileName)
-        {
-            throw new System.NotImplementedException();
+            return result;
         }
     }
 }

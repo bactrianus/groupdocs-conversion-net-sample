@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using GroupDocs.Conversion.Config;
 using GroupDocs.Conversion.Converter.Option;
-using GroupDocs.Conversion.Domain;
 using GroupDocs.Conversion.Handler;
 using GroupDocs.Foundation.Domain;
 
@@ -56,11 +56,10 @@ namespace GroupDocs.Conversion.Net.Sample
             const string fileName = @"Sample.pdf";
 
             var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
-            var fileDescription = new FileDescription { Guid = fileInfo.Name, Name = fileInfo.Name, LastModified = fileInfo.CreationTime.Ticks };
-
+           
             // Get Html converter and convert
-            var htmlConverter = _conversionHandler.GetToHtmlConverter(fileDescription, new HtmlOptions());
-            var result = htmlConverter.Convert();
+            var htmlConverter = _conversionHandler.GetHtmlConverter(fileInfo.Name);
+            var result = htmlConverter.Convert<Stream>(new HtmlOptions());
 
             // Write converted stream to file
             result.Position = 0;
@@ -84,11 +83,10 @@ namespace GroupDocs.Conversion.Net.Sample
             const string fileName = @"sample.doc";
 
             var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
-            var fileDescription = new FileDescription { Guid = fileInfo.Name, Name = fileInfo.Name, LastModified = fileInfo.CreationTime.Ticks };
-
+            
             // Get Pdf converter and convert
-            var htmlConverter = _conversionHandler.GetToPdfConverter(fileDescription, new PdfOptions());
-            var result = htmlConverter.Convert();
+            var htmlConverter = _conversionHandler.GetPdfConverter(fileInfo.Name);
+            var result = htmlConverter.Convert<Stream>(new PdfOptions());
 
             // Write converted stream to file
             result.Position = 0;
@@ -112,11 +110,10 @@ namespace GroupDocs.Conversion.Net.Sample
             const string fileName = @"sample.doc";
 
             var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
-            var fileDescription = new FileDescription { Guid = fileInfo.Name, Name = fileInfo.Name, LastModified = fileInfo.CreationTime.Ticks };
-
+            
             // Get Image converter and convert
-            var htmlConverter = _conversionHandler.GetToImageConverter(fileDescription, new ImageOptions{ ConvertFileType = FileType.Jpg});
-            var result = htmlConverter.Convert();
+            var htmlConverter = _conversionHandler.GetImageConverter(fileInfo.Name);
+            var result = htmlConverter.Convert<IList<Stream>>(new ImageOptions{ ConvertFileType = FileType.Jpg});
 
             // Write converted stream to file
             var page = 1;
@@ -145,8 +142,7 @@ namespace GroupDocs.Conversion.Net.Sample
             const string fileName = @"sample.doc";
 
             var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
-            var fileDescription = new FileDescription { Guid = fileInfo.Name, Name = fileInfo.Name, LastModified = fileInfo.CreationTime.Ticks };
-
+            
             // Set image convert options
             var options = new ImageOptions
             {
@@ -159,8 +155,8 @@ namespace GroupDocs.Conversion.Net.Sample
             };
 
             // Get Image converter and convert
-            var htmlConverter = _conversionHandler.GetToImageConverter(fileDescription, options);
-            var result = htmlConverter.Convert();
+            var htmlConverter = _conversionHandler.GetImageConverter(fileInfo.Name);
+            var result = htmlConverter.Convert<IList<Stream>>(options);
 
             // Write converted stream to file
             var page = 1;
@@ -189,8 +185,7 @@ namespace GroupDocs.Conversion.Net.Sample
             const string fileName = @"sample.doc";
 
             var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
-            var fileDescription = new FileDescription { Guid = fileInfo.Name, Name = fileInfo.Name, LastModified = fileInfo.CreationTime.Ticks };
-
+            
             // Set image convert options
             var options = new ImageOptions
             {
@@ -199,8 +194,8 @@ namespace GroupDocs.Conversion.Net.Sample
             };
 
             // Get Image converter and convert
-            var htmlConverter = _conversionHandler.GetToImageConverter(fileDescription, options);
-            var result = htmlConverter.Convert();
+            var htmlConverter = _conversionHandler.GetImageConverter(fileInfo.Name);
+            var result = htmlConverter.Convert<IList<Stream>>(options);
 
             // Write converted stream to file
             var page = 1;
