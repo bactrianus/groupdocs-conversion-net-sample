@@ -42,10 +42,20 @@ namespace GroupDocs.Conversion.Net.Sample
             // Convert Doc to Bmp through Pdf
             ConvertDocToBmpThroughPdf();
 
+            //Convert Doc to PDF and return the path of the converted file
+            ConvertDocToPdfReturnPath();
+
             Console.WriteLine("Conversion complete. Press any key to exit");
             Console.ReadKey();
         }
 
+        private static void EnsureOutputDirectory(string resultPath)
+        {
+            if (!Directory.Exists(resultPath))
+            {
+                Directory.CreateDirectory(resultPath);
+            }
+        }
 
         private static void ConvertPdfToHtml()
         {
@@ -59,17 +69,21 @@ namespace GroupDocs.Conversion.Net.Sample
            
             // Get Html converter and convert
             var htmlConverter = _conversionHandler.GetHtmlConverter(fileInfo.Name);
-            var result = htmlConverter.Convert<Stream>(new HtmlOptions());
-
-            // Write converted stream to file
-            result.Position = 0;
-            using (var stream = new FileInfo(Path.Combine(resultPath, "result.html")).Open(FileMode.Create, FileAccess.Write))
+            using (var result = htmlConverter.Convert<Stream>(new HtmlOptions()))
             {
-                var buffer = new byte[16384];
-                int read;
-                while ((read = result.Read(buffer, 0, buffer.Length)) > 0)
+                EnsureOutputDirectory(resultPath);
+                // Write converted stream to file
+                result.Position = 0;
+                using (
+                    var stream = new FileInfo(Path.Combine(resultPath, "result.html")).Open(FileMode.Create,
+                        FileAccess.Write))
                 {
-                    stream.Write(buffer, 0, read);
+                    var buffer = new byte[16384];
+                    int read;
+                    while ((read = result.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        stream.Write(buffer, 0, read);
+                    }
                 }
             }
         }
@@ -85,9 +99,9 @@ namespace GroupDocs.Conversion.Net.Sample
             var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
             
             // Get Pdf converter and convert
-            var htmlConverter = _conversionHandler.GetPdfConverter(fileInfo.Name);
-            var result = htmlConverter.Convert<Stream>(new PdfOptions());
-
+            var pdfConverter = _conversionHandler.GetPdfConverter(fileInfo.Name);
+            using (var result = pdfConverter.Convert<Stream>(new PdfOptions())) { 
+            EnsureOutputDirectory(resultPath);
             // Write converted stream to file
             result.Position = 0;
             using (var stream = new FileInfo(Path.Combine(resultPath, "result.pdf")).Open(FileMode.Create, FileAccess.Write))
@@ -99,6 +113,7 @@ namespace GroupDocs.Conversion.Net.Sample
                     stream.Write(buffer, 0, read);
                 }
             }
+}
         }
 
         private static void ConvertDocToJpg()
@@ -112,9 +127,9 @@ namespace GroupDocs.Conversion.Net.Sample
             var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
             
             // Get Image converter and convert
-            var htmlConverter = _conversionHandler.GetImageConverter(fileInfo.Name);
-            var result = htmlConverter.Convert<IList<Stream>>(new ImageOptions{ ConvertFileType = FileType.Jpg});
-
+            var imageConverter = _conversionHandler.GetImageConverter(fileInfo.Name);
+            var result = imageConverter.Convert<IList<Stream>>(new ImageOptions{ ConvertFileType = FileType.Jpg});
+            EnsureOutputDirectory(resultPath);
             // Write converted stream to file
             var page = 1;
             foreach (var pageStream in result)
@@ -130,6 +145,7 @@ namespace GroupDocs.Conversion.Net.Sample
                     }
                 }
                 page++;
+                pageStream.Dispose();
             }
         }
 
@@ -155,9 +171,9 @@ namespace GroupDocs.Conversion.Net.Sample
             };
 
             // Get Image converter and convert
-            var htmlConverter = _conversionHandler.GetImageConverter(fileInfo.Name);
-            var result = htmlConverter.Convert<IList<Stream>>(options);
-
+            var imageConverter = _conversionHandler.GetImageConverter(fileInfo.Name);
+            var result = imageConverter.Convert<IList<Stream>>(options);
+            EnsureOutputDirectory(resultPath);
             // Write converted stream to file
             var page = 1;
             foreach (var pageStream in result)
@@ -173,6 +189,7 @@ namespace GroupDocs.Conversion.Net.Sample
                     }
                 }
                 page++;
+                pageStream.Dispose();
             }
         }
 
@@ -194,9 +211,9 @@ namespace GroupDocs.Conversion.Net.Sample
             };
 
             // Get Image converter and convert
-            var htmlConverter = _conversionHandler.GetImageConverter(fileInfo.Name);
-            var result = htmlConverter.Convert<IList<Stream>>(options);
-
+            var imageConverter = _conversionHandler.GetImageConverter(fileInfo.Name);
+            var result = imageConverter.Convert<IList<Stream>>(options);
+            EnsureOutputDirectory(resultPath);
             // Write converted stream to file
             var page = 1;
             foreach (var pageStream in result)
@@ -212,7 +229,23 @@ namespace GroupDocs.Conversion.Net.Sample
                     }
                 }
                 page++;
+                pageStream.Dispose();
             }
+        }
+
+        private static void ConvertDocToPdfReturnPath()
+        {
+            Console.WriteLine("Press any key to convert DOC to PDF and return the path of the converted file ... ");
+            Console.ReadKey();
+
+            const string fileName = @"sample.doc";
+
+            var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
+
+            // Get Pdf converter and convert
+            var pdfConverter = _conversionHandler.GetPdfConverter(fileInfo.Name);
+            var convertedPath = pdfConverter.Convert<string>(new PdfOptions());
+            Console.WriteLine("Converted file path is: " + convertedPath);
         }
     }
 }
