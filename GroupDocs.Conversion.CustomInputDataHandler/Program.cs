@@ -20,21 +20,25 @@ namespace GroupDocs.Conversion.CustomInputDataHandler
             var inputDataHandler = new AmazonInputDataHandler();
             var conversionHandler = new ConversionHandler(conversionConfig, inputDataHandler);
 
-            var converter = conversionHandler.GetPdfConverter(sourceFileName);
-            var resultStream = converter.Convert<Stream>(new PdfOptions());
-            using (var file = new FileStream(resultFileName, FileMode.Create))
-            {
-                var buffer = new byte[16384];
-                int read;
-                while ((read = resultStream.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    file.Write(buffer, 0, read);
-                }
-            }
+            var resultStream = conversionHandler.Convert<Stream>(sourceFileName, new PdfSaveOptions());
+            WriteStreamToFile(resultStream, resultFileName);
             resultStream.Dispose();
 
             Console.WriteLine("The conversion finished. Press <<ENTER>> to exit.");
             Console.ReadLine();
+        }
+
+        private static void WriteStreamToFile(Stream stream, string fileName)
+        {
+            using (var file = new FileStream(fileName, FileMode.Create))
+            {
+                var buffer = new byte[16384];
+                int read;
+                while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    file.Write(buffer, 0, read);
+                }
+            }
         }
     }
 }

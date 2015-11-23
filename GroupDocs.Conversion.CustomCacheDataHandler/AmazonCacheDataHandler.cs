@@ -112,14 +112,14 @@ namespace GroupDocs.Conversion.CustomCacheDataHandler
 
         private string GetCachePath(string path, CacheFileDescription cacheFileDescription)
         {
-            if (cacheFileDescription.Options == null)
+            if (cacheFileDescription.SaveOptions == null)
             {
                 throw new System.Exception("CacheFileDescription.Options is not set");
             }
             string filePath;
             string fileName;
 
-            var options = cacheFileDescription.Options as ImageOptions;
+            var options = cacheFileDescription.SaveOptions as ImageSaveOptions;
             if (options != null)
             {
                 if (!string.IsNullOrEmpty(options.CustomName))
@@ -146,9 +146,9 @@ namespace GroupDocs.Conversion.CustomCacheDataHandler
             }
             else
             {
-                fileName = !string.IsNullOrEmpty(cacheFileDescription.Options.CustomName)
-                ? string.Format("{0}.{1}", cacheFileDescription.Options.CustomName, cacheFileDescription.Options.ConvertFileType.ToString().ToLower())
-                : string.Format("{0}.{1}", cacheFileDescription.BaseName, cacheFileDescription.Options.ConvertFileType.ToString().ToLower());
+                fileName = !string.IsNullOrEmpty(cacheFileDescription.SaveOptions.CustomName)
+                ? string.Format("{0}.{1}", cacheFileDescription.SaveOptions.CustomName, cacheFileDescription.SaveOptions.ConvertFileType.ToString().ToLower())
+                : string.Format("{0}.{1}", cacheFileDescription.BaseName, cacheFileDescription.SaveOptions.ConvertFileType.ToString().ToLower());
 
                 filePath = string.Format(@"{0}\{1}\{2}",path, cacheFileDescription.Guid, fileName);
             }

@@ -12,6 +12,7 @@ namespace GroupDocs.Conversion.Net.Sample
     {
         private static readonly string RootFolder = Path.GetFullPath("../../AppData");
         private static ConversionHandler _conversionHandler;
+        private static readonly string ResultPath = Path.Combine(RootFolder, "ConvertedFiles");
 
         static void Main()
         {
@@ -29,7 +30,7 @@ namespace GroupDocs.Conversion.Net.Sample
 
             // Convert Pdf To Html
             ConvertPdfToHtml();
-     
+
             // Convert Doc to Pdf
             ConvertDocToPdf();
 
@@ -49,11 +50,23 @@ namespace GroupDocs.Conversion.Net.Sample
             Console.ReadKey();
         }
 
-        private static void EnsureOutputDirectory(string resultPath)
+        private static void WriteStreamToFile(Stream stream, string fileName)
         {
-            if (!Directory.Exists(resultPath))
+            if (!Directory.Exists(ResultPath))
             {
-                Directory.CreateDirectory(resultPath);
+                Directory.CreateDirectory(ResultPath);
+            }
+            stream.Position = 0;
+            using (
+                var fileStream = new FileInfo(Path.Combine(ResultPath, fileName)).Open(FileMode.Create,
+                    FileAccess.Write))
+            {
+                var buffer = new byte[16384];
+                int read;
+                while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    fileStream.Write(buffer, 0, read);
+                }
             }
         }
 
@@ -61,31 +74,11 @@ namespace GroupDocs.Conversion.Net.Sample
         {
             Console.WriteLine("Press any key to convert PDF to HTML ... ");
             Console.ReadKey();
-
-            var resultPath = Path.Combine(RootFolder, "ConvertedFiles");
-            const string fileName = @"Sample.pdf";
-
-            var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
            
-            // Get Html converter and convert
-            var htmlConverter = _conversionHandler.GetHtmlConverter(fileInfo.Name);
-            using (var result = htmlConverter.Convert<Stream>(new HtmlOptions()))
-            {
-                EnsureOutputDirectory(resultPath);
-                // Write converted stream to file
-                result.Position = 0;
-                using (
-                    var stream = new FileInfo(Path.Combine(resultPath, "result.html")).Open(FileMode.Create,
-                        FileAccess.Write))
-                {
-                    var buffer = new byte[16384];
-                    int read;
-                    while ((read = result.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        stream.Write(buffer, 0, read);
-                    }
-                }
-            }
+            // Convert document
+            var result = _conversionHandler.Convert<Stream>("sample.pdf", new HtmlSaveOptions());
+            // Write converted stream to file
+            WriteStreamToFile(result, "result.html");
         }
 
         private static void ConvertDocToPdf()
@@ -93,27 +86,10 @@ namespace GroupDocs.Conversion.Net.Sample
             Console.WriteLine("Press any key to convert DOC to PDF ... ");
             Console.ReadKey();
 
-            var resultPath = Path.Combine(RootFolder, "ConvertedFiles");
-            const string fileName = @"sample.doc";
-
-            var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
-            
-            // Get Pdf converter and convert
-            var pdfConverter = _conversionHandler.GetPdfConverter(fileInfo.Name);
-            using (var result = pdfConverter.Convert<Stream>(new PdfOptions())) { 
-            EnsureOutputDirectory(resultPath);
+            // Convert document
+            var result = _conversionHandler.Convert<Stream>("sample.doc", new PdfSaveOptions());
             // Write converted stream to file
-            result.Position = 0;
-            using (var stream = new FileInfo(Path.Combine(resultPath, "result.pdf")).Open(FileMode.Create, FileAccess.Write))
-            {
-                var buffer = new byte[16384];
-                int read;
-                while ((read = result.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    stream.Write(buffer, 0, read);
-                }
-            }
-}
+            WriteStreamToFile(result, "result.pdf");
         }
 
         private static void ConvertDocToJpg()
@@ -121,30 +97,13 @@ namespace GroupDocs.Conversion.Net.Sample
             Console.WriteLine("Press any key to convert DOC to JPG ... ");
             Console.ReadKey();
 
-            var resultPath = Path.Combine(RootFolder, "ConvertedFiles");
-            const string fileName = @"sample.doc";
-
-            var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
-            
-            // Get Image converter and convert
-            var imageConverter = _conversionHandler.GetImageConverter(fileInfo.Name);
-            var result = imageConverter.Convert<IList<Stream>>(new ImageOptions{ ConvertFileType = FileType.Jpg});
-            EnsureOutputDirectory(resultPath);
+            // Convert document
+            var result = _conversionHandler.Convert<IList<Stream>>("sample.doc", new ImageSaveOptions{ ConvertFileType = FileType.Jpg});
             // Write converted stream to file
             var page = 1;
             foreach (var pageStream in result)
             {
-                pageStream.Position = 0;
-                using (var stream = new FileInfo(Path.Combine(resultPath, String.Format("result_page{0}.jpg", page))).Open(FileMode.Create, FileAccess.Write))
-                {
-                    var buffer = new byte[16384];
-                    int read;
-                    while ((read = pageStream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        stream.Write(buffer, 0, read);
-                    }
-                }
-                page++;
+                WriteStreamToFile(pageStream, string.Format("result_page{0}.jpg", page));
                 pageStream.Dispose();
             }
         }
@@ -153,14 +112,9 @@ namespace GroupDocs.Conversion.Net.Sample
         {
             Console.WriteLine("Press any key to convert DOC to PNG with custom options ... ");
             Console.ReadKey();
-
-            var resultPath = Path.Combine(RootFolder, "ConvertedFiles");
-            const string fileName = @"sample.doc";
-
-            var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
             
             // Set image convert options
-            var options = new ImageOptions
+            var options = new ImageSaveOptions
             {
                 ConvertFileType = FileType.Png, // Set the output file format
                 Width = 400, // Set the width of the conveted image. If only width or height is set, the image will keep it's aspect ratio
@@ -170,25 +124,13 @@ namespace GroupDocs.Conversion.Net.Sample
                 NumPagesToConvert = 2 // Number of pages to convert
             };
 
-            // Get Image converter and convert
-            var imageConverter = _conversionHandler.GetImageConverter(fileInfo.Name);
-            var result = imageConverter.Convert<IList<Stream>>(options);
-            EnsureOutputDirectory(resultPath);
+            // Convert document
+            var result = _conversionHandler.Convert<IList<Stream>>("sample.doc", options);
             // Write converted stream to file
             var page = 1;
             foreach (var pageStream in result)
             {
-                pageStream.Position = 0;
-                using (var stream = new FileInfo(Path.Combine(resultPath, String.Format("result_custom_options_page{0}.png", page))).Open(FileMode.Create, FileAccess.Write))
-                {
-                    var buffer = new byte[16384];
-                    int read;
-                    while ((read = pageStream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        stream.Write(buffer, 0, read);
-                    }
-                }
-                page++;
+                WriteStreamToFile(pageStream, string.Format("result_custom_options_page{0}.png", page));
                 pageStream.Dispose();
             }
         }
@@ -197,38 +139,21 @@ namespace GroupDocs.Conversion.Net.Sample
         {
             Console.WriteLine("Press any key to convert DOC to BMP through PDF ... ");
             Console.ReadKey();
-
-            var resultPath = Path.Combine(RootFolder, "ConvertedFiles");
-            const string fileName = @"sample.doc";
-
-            var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
             
             // Set image convert options
-            var options = new ImageOptions
+            var options = new ImageSaveOptions
             {
                 ConvertFileType = FileType.Bmp, // Set the output file format
                 UsePdf = true // the file will be converted to pdf and then from pdf to bmp
             };
 
-            // Get Image converter and convert
-            var imageConverter = _conversionHandler.GetImageConverter(fileInfo.Name);
-            var result = imageConverter.Convert<IList<Stream>>(options);
-            EnsureOutputDirectory(resultPath);
+            // Convert document
+            var result = _conversionHandler.Convert<IList<Stream>>("sample.doc", options);
             // Write converted stream to file
             var page = 1;
             foreach (var pageStream in result)
             {
-                pageStream.Position = 0;
-                using (var stream = new FileInfo(Path.Combine(resultPath, String.Format("result_use_pdf_page{0}.bmp", page))).Open(FileMode.Create, FileAccess.Write))
-                {
-                    var buffer = new byte[16384];
-                    int read;
-                    while ((read = pageStream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        stream.Write(buffer, 0, read);
-                    }
-                }
-                page++;
+                WriteStreamToFile(pageStream, string.Format("result_use_pdf_page{0}.bmp", page));
                 pageStream.Dispose();
             }
         }
@@ -238,13 +163,8 @@ namespace GroupDocs.Conversion.Net.Sample
             Console.WriteLine("Press any key to convert DOC to PDF and return the path of the converted file ... ");
             Console.ReadKey();
 
-            const string fileName = @"sample.doc";
-
-            var fileInfo = new FileInfo(Path.Combine(_conversionHandler.Config.StoragePath, fileName));
-
-            // Get Pdf converter and convert
-            var pdfConverter = _conversionHandler.GetPdfConverter(fileInfo.Name);
-            var convertedPath = pdfConverter.Convert<string>(new PdfOptions());
+            // Convert document
+            var convertedPath = _conversionHandler.Convert<string>("sample.doc", new PdfSaveOptions());
             Console.WriteLine("Converted file path is: " + convertedPath);
         }
     }
