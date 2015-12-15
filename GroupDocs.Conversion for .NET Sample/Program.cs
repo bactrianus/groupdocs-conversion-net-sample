@@ -4,7 +4,6 @@ using System.IO;
 using GroupDocs.Conversion.Config;
 using GroupDocs.Conversion.Converter.Option;
 using GroupDocs.Conversion.Handler;
-using GroupDocs.Foundation.Domain;
 
 namespace GroupDocs.Conversion.Net.Sample
 {
@@ -98,7 +97,7 @@ namespace GroupDocs.Conversion.Net.Sample
             Console.ReadKey();
 
             // Convert document
-            var result = _conversionHandler.Convert<IList<Stream>>("sample.doc", new ImageSaveOptions{ ConvertFileType = FileType.Jpg});
+            var result = _conversionHandler.Convert<IList<Stream>>("sample.doc", new ImageSaveOptions{ ConvertFileType = ImageSaveOptions.ImageFileType.Jpeg});
             // Write converted stream to file
             var page = 1;
             foreach (var pageStream in result)
@@ -116,7 +115,7 @@ namespace GroupDocs.Conversion.Net.Sample
             // Set image convert options
             var options = new ImageSaveOptions
             {
-                ConvertFileType = FileType.Png, // Set the output file format
+                ConvertFileType = ImageSaveOptions.ImageFileType.Png, // Set the output file format
                 Width = 400, // Set the width of the conveted image. If only width or height is set, the image will keep it's aspect ratio
                 CustomName = "MyAwesomeFileName", // if cache is used, then the CustomName will be used as cache file name
                 UseWidthForCustomName = true, // if cache is used and CustomName is set, the cache file name will contain also the image width
@@ -143,7 +142,7 @@ namespace GroupDocs.Conversion.Net.Sample
             // Set image convert options
             var options = new ImageSaveOptions
             {
-                ConvertFileType = FileType.Bmp, // Set the output file format
+                ConvertFileType = ImageSaveOptions.ImageFileType.Bmp, // Set the output file format
                 UsePdf = true // the file will be converted to pdf and then from pdf to bmp
             };
 
