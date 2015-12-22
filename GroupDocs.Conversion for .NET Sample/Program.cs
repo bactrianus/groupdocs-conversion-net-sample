@@ -104,6 +104,7 @@ namespace GroupDocs.Conversion.Net.Sample
             {
                 WriteStreamToFile(pageStream, string.Format("result_page{0}.jpg", page));
                 pageStream.Dispose();
+                page++;
             }
         }
 
@@ -131,6 +132,7 @@ namespace GroupDocs.Conversion.Net.Sample
             {
                 WriteStreamToFile(pageStream, string.Format("result_custom_options_page{0}.png", page));
                 pageStream.Dispose();
+                page++;
             }
         }
 
@@ -154,6 +156,7 @@ namespace GroupDocs.Conversion.Net.Sample
             {
                 WriteStreamToFile(pageStream, string.Format("result_use_pdf_page{0}.bmp", page));
                 pageStream.Dispose();
+                page++;
             }
         }
 
