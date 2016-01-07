@@ -33,6 +33,9 @@ namespace GroupDocs.Conversion.Net.Sample
             // Convert Doc to Pdf
             ConvertDocToPdf();
 
+            // Convert Doc From Stream to PDf
+            ConvertDocFromStreamToPdf();
+
             // Convert Doc to Jpg
             ConvertDocToJpg();
 
@@ -73,7 +76,7 @@ namespace GroupDocs.Conversion.Net.Sample
         {
             Console.WriteLine("Press any key to convert PDF to HTML ... ");
             Console.ReadKey();
-           
+
             // Convert document
             var result = _conversionHandler.Convert<Stream>("sample.pdf", new HtmlSaveOptions());
             // Write converted stream to file
@@ -89,6 +92,22 @@ namespace GroupDocs.Conversion.Net.Sample
             var result = _conversionHandler.Convert<Stream>("sample.doc", new PdfSaveOptions());
             // Write converted stream to file
             WriteStreamToFile(result, "result.pdf");
+        }
+
+        private static void ConvertDocFromStreamToPdf()
+        {
+            Console.WriteLine("Press any key to convert DOC from Stream to PDF ... ");
+            Console.ReadKey();
+
+            var fileName = Path.Combine(RootFolder, "TestFiles")+ @"/sample.doc";
+            using (FileStream fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            {
+                // Convert document
+                var result = _conversionHandler.Convert<Stream>(fileStream, "sample.doc", new PdfSaveOptions());
+
+                // Write converted stream to file
+                WriteStreamToFile(result, "result_from_stream.pdf");
+            }
         }
 
         private static void ConvertDocToJpg()
@@ -112,7 +131,7 @@ namespace GroupDocs.Conversion.Net.Sample
         {
             Console.WriteLine("Press any key to convert DOC to PNG with custom options ... ");
             Console.ReadKey();
-            
+
             // Set image convert options
             var options = new ImageSaveOptions
             {
@@ -140,7 +159,7 @@ namespace GroupDocs.Conversion.Net.Sample
         {
             Console.WriteLine("Press any key to convert DOC to BMP through PDF ... ");
             Console.ReadKey();
-            
+
             // Set image convert options
             var options = new ImageSaveOptions
             {
