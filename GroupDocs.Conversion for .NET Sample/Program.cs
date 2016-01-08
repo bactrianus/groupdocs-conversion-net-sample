@@ -18,14 +18,15 @@ namespace GroupDocs.Conversion.Net.Sample
             var storagePath = Path.Combine(RootFolder, "TestFiles");
             var cachePath = Path.Combine(RootFolder, "Cache");
 
+            // Set license
+            License license = new License();
+            license.SetLicense("");
+
             // Setup Conversion configuration
             var conversionConfig = new ConversionConfig {StoragePath = storagePath, CachePath = cachePath};
             conversionConfig.SetUseCache(true);
 
             _conversionHandler = new ConversionHandler(conversionConfig);
-
-            // Set license
-            //_conversionHandler.SetLicense();
 
             // Convert Pdf To Html
             ConvertPdfToHtml();
