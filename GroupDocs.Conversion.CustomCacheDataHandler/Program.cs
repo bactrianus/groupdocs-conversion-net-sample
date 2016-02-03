@@ -19,7 +19,7 @@ namespace GroupDocs.Conversion.CustomCacheDataHandler
                 CachePath = "cache",
                 StoragePath = "."
             };
-            conversionConfig.SetUseCache(true);
+            conversionConfig.UseCache = true;
 
             var inputDataHandler = new AmazonInputDataHandler();
             var cacheDataHandler = new AmazonCacheDataHandler(conversionConfig);

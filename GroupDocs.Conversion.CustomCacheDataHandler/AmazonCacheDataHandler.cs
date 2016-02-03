@@ -25,7 +25,7 @@ namespace GroupDocs.Conversion.CustomCacheDataHandler
         
         public bool Exists(CacheFileDescription cacheFileDescription)
         {
-            if (!_conversionConfig.IsUseCache())
+            if (!_conversionConfig.UseCache)
             {
                 return false;
             }
@@ -85,7 +85,7 @@ namespace GroupDocs.Conversion.CustomCacheDataHandler
         {
             try
             {
-                if (!_conversionConfig.IsUseCache())
+                if (!_conversionConfig.UseCache)
                 {
                     return new MemoryStream();
                 }

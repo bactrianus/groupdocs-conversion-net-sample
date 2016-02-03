@@ -15,7 +15,7 @@ namespace GroupDocs.Conversion.CustomInputDataHandler
 
             // Setup Conversion configuration
             var conversionConfig = new ConversionConfig();
-            conversionConfig.SetUseCache(false);
+            conversionConfig.UseCache = false;
 
             var inputDataHandler = new AmazonInputDataHandler();
             var conversionHandler = new ConversionHandler(conversionConfig, inputDataHandler);

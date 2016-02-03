@@ -24,7 +24,7 @@ namespace GroupDocs.Conversion.Net.Sample
 
             // Setup Conversion configuration
             var conversionConfig = new ConversionConfig {StoragePath = storagePath, CachePath = cachePath};
-            conversionConfig.SetUseCache(true);
+            conversionConfig.UseCache = true;
 
             _conversionHandler = new ConversionHandler(conversionConfig);
 
