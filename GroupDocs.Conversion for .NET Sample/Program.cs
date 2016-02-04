@@ -23,8 +23,13 @@ namespace GroupDocs.Conversion.Net.Sample
             license.SetLicense("");
 
             // Setup Conversion configuration
-            var conversionConfig = new ConversionConfig {StoragePath = storagePath, CachePath = cachePath};
-            conversionConfig.UseCache = true;
+            var conversionConfig = new ConversionConfig
+            {
+                StoragePath = storagePath,
+                OutputPath = ResultPath,
+                CachePath = cachePath,
+                UseCache = false
+            };
 
             _conversionHandler = new ConversionHandler(conversionConfig);
 
