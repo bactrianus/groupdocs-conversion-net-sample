@@ -11,7 +11,6 @@ namespace GroupDocs.Conversion.CustomOutputDataHandler
         static void Main()
         {
             const string sourceFileName = "sample.doc"; //TODO: Put the source filename here
-            const string resultFileName = "result.pdf"; //TODO: Put the result filename here
 
             // Setup Conversion configuration
             var conversionConfig = new ConversionConfig
@@ -25,11 +24,9 @@ namespace GroupDocs.Conversion.CustomOutputDataHandler
             var outputDataHandler = new AmazonOutputDataHandler(conversionConfig);
             var conversionHandler = new ConversionHandler(conversionConfig, inputDataHandler, outputDataHandler);
 
-            var resultStream = conversionHandler.Convert<Stream>(sourceFileName, new PdfSaveOptions());
-            WriteStreamToFile(resultStream, resultFileName);
-            resultStream.Dispose();
+            var resultPath = conversionHandler.Convert<string>(sourceFileName, new PdfSaveOptions());
 
-            Console.WriteLine("The conversion finished. Press <<ENTER>> to exit.");
+            Console.WriteLine("The conversion finished. The result can be located here: {0}. Press <<ENTER>> to exit.",  resultPath);
             Console.ReadLine();
         }
 
