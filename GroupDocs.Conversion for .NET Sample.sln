@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupDocs.Conversion for .NET Sample", "GroupDocs.Conversion for .NET Sample\GroupDocs.Conversion for .NET Sample.csproj", "{80818956-EA2D-47C3-A442-AB69C118B590}"
 EndProject
@@ -15,6 +15,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupDocs.Conversion.CustomInputDataHandler", "GroupDocs.Conversion.CustomInputDataHandler\GroupDocs.Conversion.CustomInputDataHandler.csproj", "{95EB919B-C547-4875-9D52-68BB0DF1C87F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupDocs.Conversion.CustomCacheDataHandler", "GroupDocs.Conversion.CustomCacheDataHandler\GroupDocs.Conversion.CustomCacheDataHandler.csproj", "{B6C95F80-7E93-470B-A2A8-A460A2FA2EFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupDocs.Conversion.CustomOutputDataHandler", "GroupDocs.Conversion.CustomOutputDataHandler\GroupDocs.Conversion.CustomOutputDataHandler.csproj", "{69DE5FDB-6628-465A-9A0D-CDD80A5D8602}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +36,10 @@ Global
 		{B6C95F80-7E93-470B-A2A8-A460A2FA2EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6C95F80-7E93-470B-A2A8-A460A2FA2EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6C95F80-7E93-470B-A2A8-A460A2FA2EFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69DE5FDB-6628-465A-9A0D-CDD80A5D8602}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69DE5FDB-6628-465A-9A0D-CDD80A5D8602}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69DE5FDB-6628-465A-9A0D-CDD80A5D8602}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69DE5FDB-6628-465A-9A0D-CDD80A5D8602}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
