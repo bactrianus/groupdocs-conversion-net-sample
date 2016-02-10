@@ -191,7 +191,7 @@ namespace GroupDocs.Conversion.Net.Sample
             Console.ReadKey();
 
             // Convert document
-            var convertedPath = _conversionHandler.Convert<string>("sample.doc", new PdfSaveOptions());
+            var convertedPath = _conversionHandler.Convert<string>("sample.doc", new PdfSaveOptions { OutputType = OutputType.String });
             Console.WriteLine("Converted file path is: " + convertedPath);
         }
     }

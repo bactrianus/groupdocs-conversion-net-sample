@@ -24,7 +24,7 @@ namespace GroupDocs.Conversion.CustomOutputDataHandler
             var outputDataHandler = new AmazonOutputDataHandler(conversionConfig);
             var conversionHandler = new ConversionHandler(conversionConfig, inputDataHandler, outputDataHandler);
 
-            var resultPath = conversionHandler.Convert<string>(sourceFileName, new PdfSaveOptions());
+            var resultPath = conversionHandler.Convert<string>(sourceFileName, new PdfSaveOptions { OutputType = OutputType.String });
 
             Console.WriteLine("The conversion finished. The result can be located here: {0}. Press <<ENTER>> to exit.",  resultPath);
             Console.ReadLine();
