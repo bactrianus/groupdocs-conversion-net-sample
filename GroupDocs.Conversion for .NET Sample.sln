@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupDocs.Conversion.Custom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupDocs.Conversion.CustomOutputDataHandler", "GroupDocs.Conversion.CustomOutputDataHandler\GroupDocs.Conversion.CustomOutputDataHandler.csproj", "{69DE5FDB-6628-465A-9A0D-CDD80A5D8602}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupDocs.Conversion.Google", "GroupDocs.Conversion.Google\GroupDocs.Conversion.Google.csproj", "{357A0DC7-6CA8-49BE-BAD5-8A61844B065E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{69DE5FDB-6628-465A-9A0D-CDD80A5D8602}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69DE5FDB-6628-465A-9A0D-CDD80A5D8602}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69DE5FDB-6628-465A-9A0D-CDD80A5D8602}.Release|Any CPU.Build.0 = Release|Any CPU
+		{357A0DC7-6CA8-49BE-BAD5-8A61844B065E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{357A0DC7-6CA8-49BE-BAD5-8A61844B065E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{357A0DC7-6CA8-49BE-BAD5-8A61844B065E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{357A0DC7-6CA8-49BE-BAD5-8A61844B065E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
